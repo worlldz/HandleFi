@@ -43,7 +43,6 @@ type ClaimableTip = {
 function normalizeHandle(handle: string) {
   return handle.trim().replace(/^@/, "").toLowerCase();
 }
-
 function safeParseAmount(value: string, decimals: number) {
   try {
     if (!value) return 0n;
