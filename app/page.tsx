@@ -454,10 +454,10 @@ function BuiltOnArcCard() {
   return (
     <section
       data-ui="panel"
-      className="relative overflow-hidden rounded-[32px] border border-white/8 bg-[linear-gradient(135deg,rgba(14,28,32,0.98),rgba(8,12,20,0.99))] p-6 shadow-[0_36px_100px_rgba(0,0,0,0.42)] sm:p-7"
+      className="relative flex min-h-[226px] overflow-hidden rounded-[32px] border border-white/8 bg-[linear-gradient(135deg,rgba(14,28,32,0.98),rgba(8,12,20,0.99))] p-6 shadow-[0_36px_100px_rgba(0,0,0,0.42)] sm:p-7 xl:h-[281px]"
     >
       <div className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-[#92ffe7]/10 blur-3xl" />
-      <div className="relative grid gap-7 md:grid-cols-[1fr_auto] md:items-end">
+      <div className="relative grid w-full gap-7 md:grid-cols-[1fr_auto] md:items-end">
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#92ffe7]">Infrastructure</p>
           <h2 className="mt-3 text-2xl font-medium text-white sm:text-3xl">HandleFi is built on Arc.</h2>
@@ -469,6 +469,38 @@ function BuiltOnArcCard() {
           <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300">USDC gas</span>
           <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300">EVM</span>
           <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300">Testnet</span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function BuildOnArcStatement() {
+  return (
+    <section
+      data-ui="panel"
+      className="group relative flex min-h-[226px] overflow-hidden rounded-[32px] border border-white/8 bg-[linear-gradient(145deg,rgba(8,13,22,0.99),rgba(11,28,29,0.96))] p-6 shadow-[0_36px_100px_rgba(0,0,0,0.42)] sm:p-7 xl:h-[281px]"
+    >
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_82%_30%,rgba(146,255,231,0.14),transparent_28%),linear-gradient(110deg,transparent_42%,rgba(255,255,255,0.025)_42.5%,transparent_43%)]" />
+      <div className="pointer-events-none absolute -right-10 top-1/2 h-36 w-36 -translate-y-1/2 rounded-full border border-[#92ffe7]/10 transition duration-700 group-hover:scale-110" />
+      <div className="pointer-events-none absolute -right-3 top-1/2 h-20 w-20 -translate-y-1/2 rounded-full border border-[#92ffe7]/15 transition duration-700 group-hover:scale-125" />
+
+      <div className="relative flex w-full flex-col justify-between gap-8">
+        <div className="flex items-center justify-between gap-4">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#92ffe7]">
+            Settlement infrastructure
+          </p>
+          <span className="font-mono text-[10px] tracking-[0.2em] text-slate-500">ARC / TESTNET</span>
+        </div>
+
+        <div className="flex items-end justify-between gap-5">
+          <h2 className="max-w-[520px] text-3xl font-semibold uppercase leading-none tracking-[0.18em] text-white sm:text-4xl lg:text-[42px]">
+            Build on Arc
+          </h2>
+          <svg aria-hidden="true" viewBox="0 0 48 48" className="hidden h-12 w-12 shrink-0 text-[#92ffe7] sm:block">
+            <path d="M9 24h27M28 15l9 9-9 9" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <circle cx="10" cy="24" r="5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+          </svg>
         </div>
       </div>
     </section>
@@ -1119,8 +1151,9 @@ export default function Page() {
             <Panel
               title="Claim Reward"
               subtitle="Connect your X account to claim your rewards."
+              className="flex flex-col xl:h-[616px]"
             >
-              <div className="grid gap-4">
+              <div className="panel-scroll grid gap-4 xl:min-h-0 xl:flex-1 xl:overflow-y-auto xl:pr-1">
                 <div data-ui="subpanel" className="rounded-[28px] border border-white/8 bg-[linear-gradient(180deg,#0d131c,#091019)] p-4">
                   <Label title="X Connection" />
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -1250,6 +1283,7 @@ export default function Page() {
                 {claimStatus ? <Status text={claimStatus} /> : null}
               </div>
             </Panel>
+            <BuiltOnArcCard />
           </div>
 
           <div className="space-y-8">
@@ -1277,6 +1311,7 @@ export default function Page() {
             <Panel
               title="Network & tools"
               subtitle="Useful infrastructure links for checking HandleFi transactions, contracts, and the network it runs on."
+              className="flex flex-col xl:h-[616px]"
             >
               <div className="mt-7 grid gap-3 sm:grid-cols-2">
                 <InfrastructureLink number="01" title="Network overview" description="Learn how Arc Network is designed for stablecoin applications." href="https://www.arc.io/" />
@@ -1285,7 +1320,7 @@ export default function Page() {
                 <InfrastructureLink number="04" title="Builder community" description="Updates, technical discussions, and ecosystem events." href="https://community.arc.io/" />
               </div>
             </Panel>
-            <BuiltOnArcCard />
+            <BuildOnArcStatement />
           </div>
         </section>
       ) : tab === "payment" ? (
