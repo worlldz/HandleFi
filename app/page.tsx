@@ -1393,6 +1393,13 @@ export default function Page() {
                     >
                       Creator profile <span>↗</span>
                     </Link>
+                    <div className="flex min-h-[74px] items-center justify-between rounded-2xl border border-white/8 bg-[linear-gradient(135deg,rgba(146,255,231,0.05),rgba(255,255,255,0.025))] px-4 py-4">
+                      <div>
+                        <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">Onchain record</p>
+                        <p className="mt-2 text-sm font-semibold text-white">Arc Testnet verified</p>
+                      </div>
+                      <span className="grid h-9 w-9 place-items-center rounded-full border border-[#92ffe7]/20 bg-[#92ffe7]/8 text-[#92ffe7]">✓</span>
+                    </div>
                   </div>
                 ) : null}
 
@@ -1458,6 +1465,36 @@ export default function Page() {
                 <InfrastructureLink number="02" title="Testnet explorer" description="Inspect HandleFi contract activity, blocks, and transactions." href="https://testnet.arcscan.app/" />
                 <InfrastructureLink number="03" title="Developer docs" description="Network configuration, contracts, and integration guides." href="https://docs.arc.io/" />
                 <InfrastructureLink number="04" title="Builder community" description="Updates, technical discussions, and ecosystem events." href="https://community.arc.io/" />
+              </div>
+              <div data-ui="subpanel" className="relative mt-6 flex flex-1 overflow-hidden rounded-[28px] border border-[#92ffe7]/14 bg-[linear-gradient(145deg,rgba(9,20,24,0.96),rgba(8,12,20,0.98))] p-6 sm:p-7">
+                <div className="pointer-events-none absolute -bottom-20 -right-12 h-56 w-56 rounded-full border border-[#92ffe7]/10" />
+                <div className="pointer-events-none absolute -bottom-8 right-4 h-36 w-36 rounded-full border border-[#92ffe7]/12" />
+                <div className="relative flex w-full flex-col justify-between gap-8">
+                  <div className="flex items-center justify-between gap-4">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#92ffe7]">Why settlement lives here</p>
+                    <span className="font-mono text-xs text-[#92ffe7]">← REWARD</span>
+                  </div>
+
+                  <div className="max-w-[470px]">
+                    <h3 className="text-2xl font-medium leading-tight text-white sm:text-3xl">Social intent in. Verifiable value out.</h3>
+                    <p className="mt-4 text-sm leading-7 text-slate-400">
+                      Arc gives HandleFi stablecoin-denominated execution, fast confirmation, and a public record creators can inspect without trusting this interface.
+                    </p>
+                  </div>
+
+                  <div className="grid gap-3 sm:grid-cols-3">
+                    {[
+                      ["01", "Stablecoin native"],
+                      ["02", "Fast settlement"],
+                      ["03", "Public proof"],
+                    ].map(([number, label]) => (
+                      <div key={number} className="rounded-2xl border border-white/8 bg-white/[0.035] px-4 py-4">
+                        <p className="font-mono text-[10px] text-[#92ffe7]">{number}</p>
+                        <p className="mt-2 text-xs font-semibold text-white">{label}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </Panel>
             <div className="xl:col-start-2 xl:row-start-3">
