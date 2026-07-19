@@ -43,6 +43,47 @@ type ClaimableTip = {
 function normalizeHandle(handle: string) {
   return handle.trim().replace(/^@/, "").toLowerCase();
 }
+
+function extractHandleFromPostUrl(value: string) {
+  const input = value.trim();
+  if (!input) return null;
+
+  try {
+    const url = new URL(/^https?:\/\//i.test(input) ? input : `https://${input}`);
+    const host = url.hostname.toLowerCase().replace(/^www\./, "");
+    if (host !== "x.com" && host !== "twitter.com" && host !== "mobile.twitter.com") {
+      return null;
+    }
+
+    const [handle, route, statusId] = url.pathname.split("/").filter(Boolean);
+    const reservedRoutes = new Set([
+      "i",
+      "home",
+      "explore",
+      "search",
+      "messages",
+      "notifications",
+      "compose",
+      "settings",
+      "intent",
+      "share",
+    ]);
+
+    if (
+      route?.toLowerCase() !== "status" ||
+      !/^\d+$/.test(statusId ?? "") ||
+      reservedRoutes.has(handle?.toLowerCase() ?? "") ||
+      !/^[a-zA-Z0-9_]{1,15}$/.test(handle ?? "")
+    ) {
+      return null;
+    }
+
+    return handle;
+  } catch {
+    return null;
+  }
+}
+
 function safeParseAmount(value: string, decimals: number) {
   try {
     if (!value) return 0n;
@@ -1073,7 +1114,13 @@ export default function Page() {
                   <Input
                     placeholder="https://x.com/user/status/123... or leave empty"
                     value={tipPostUrl}
-                    onChange={(event) => setTipPostUrl(event.target.value)}
+                    onChange={(event) => {
+                      const nextUrl = event.target.value;
+                      const detectedHandle = extractHandleFromPostUrl(nextUrl);
+
+                      setTipPostUrl(nextUrl);
+                      if (detectedHandle) setTipRecipientHandle(`@${detectedHandle}`);
+                    }}
                   />
                 </div>
 
