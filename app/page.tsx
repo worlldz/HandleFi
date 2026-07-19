@@ -93,6 +93,10 @@ function safeParseAmount(value: string, decimals: number) {
   }
 }
 
+function wait(milliseconds: number) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
 function formatTimestamp(timestamp: bigint) {
   if (!timestamp) return "-";
   return new Date(Number(timestamp) * 1000).toLocaleString();
@@ -600,6 +604,7 @@ export default function Page() {
   const [verifiedTipId, setVerifiedTipId] = useState<bigint | null>(null);
   const [claimableTips, setClaimableTips] = useState<ClaimableTip[]>([]);
   const [claimLoading, setClaimLoading] = useState(false);
+  const [claimLoadError, setClaimLoadError] = useState("");
   const [selectedClaimTipId, setSelectedClaimTipId] = useState<bigint | null>(null);
   const [xUsername, setXUsername] = useState<string | null>(null);
   const [xLoading, setXLoading] = useState(true);
@@ -711,10 +716,12 @@ export default function Page() {
     if (!username || !hasTipsContract || !publicClient) {
       setClaimableTips([]);
       setSelectedClaimTipId(null);
+      setClaimLoadError("");
       return;
     }
 
     setClaimLoading(true);
+    setClaimLoadError("");
 
     try {
       const nextTipId = (await (publicClient.readContract as any)({
@@ -734,26 +741,36 @@ export default function Page() {
       const ids = Array.from({ length: total }, (_, index) => BigInt(index + 1));
       const now = BigInt(Math.floor(Date.now() / 1000));
 
-      const tips = (
-        await Promise.all(
-          ids.map(async (tipId) => {
-            try {
-              const rawTip = await (publicClient.readContract as any)({
-                address: tipsAddress,
-                abi: handleFiTipsAbi,
-                functionName: "getTip",
-                args: [tipId],
-              });
-              const parsed = parseTipReadResult(rawTip);
-              return parsed ? ({ ...parsed, tipId } as ClaimableTip) : null;
-            } catch {
-              return null;
-            }
-          }),
-        )
-      )
-        .filter((tip): tip is ClaimableTip => Boolean(tip))
-        .filter(
+      const loadedTips: ClaimableTip[] = [];
+
+      // Public Arc RPCs can reject parallel reads. Keep claim discovery ordered
+      // and retry each item instead of silently presenting an empty result.
+      for (const tipId of ids) {
+        let rawTip: unknown;
+        let lastError: unknown;
+
+        for (let attempt = 0; attempt < 3; attempt += 1) {
+          try {
+            rawTip = await (publicClient.readContract as any)({
+              address: tipsAddress,
+              abi: handleFiTipsAbi,
+              functionName: "getTip",
+              args: [tipId],
+            });
+            break;
+          } catch (error) {
+            lastError = error;
+            if (attempt < 2) await wait(450 * (attempt + 1));
+          }
+        }
+
+        if (!rawTip) throw lastError ?? new Error(`Reward ${tipId} could not be read.`);
+        const parsed = parseTipReadResult(rawTip);
+        if (parsed) loadedTips.push({ ...parsed, tipId } as ClaimableTip);
+        await wait(120);
+      }
+
+      const tips = loadedTips.filter(
           (tip) =>
             normalizeHandle(tip.recipientHandle) === username &&
             !tip.claimed &&
@@ -764,6 +781,12 @@ export default function Page() {
       setClaimableTips(tips);
       setSelectedClaimTipId((current) =>
         tips.find((tip) => tip.tipId === current)?.tipId ?? tips[0]?.tipId ?? null,
+      );
+    } catch (error) {
+      setClaimableTips([]);
+      setSelectedClaimTipId(null);
+      setClaimLoadError(
+        getReadableError(error, "Rewards could not be loaded. Please try again."),
       );
     } finally {
       setClaimLoading(false);
@@ -1263,6 +1286,8 @@ export default function Page() {
                   <Label title="Claimable Rewards" />
                   {claimLoading ? (
                     <p className="text-sm leading-6 text-slate-400">Loading claimable rewards...</p>
+                  ) : claimLoadError ? (
+                    <p className="text-sm leading-6 text-amber-300">{claimLoadError}</p>
                   ) : claimableTips.length ? (
                     <div className="grid gap-3">
                       {claimableTips.map((tip) => (
