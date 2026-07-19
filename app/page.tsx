@@ -1403,9 +1403,14 @@ export default function Page() {
                     <Link
                       href={`/creator/${selectedClaimTip.recipientHandle.replace(/^@/, "")}`}
                       target="_blank"
-                      className="flex min-h-[74px] items-center justify-between rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-4 text-sm font-semibold text-white transition hover:bg-white/[0.06]"
+                      className="group relative flex min-h-[74px] items-center justify-between overflow-hidden rounded-2xl border-2 border-[#6f9dff]/28 bg-[linear-gradient(135deg,rgba(39,82,151,0.22),rgba(24,42,78,0.18)_52%,rgba(92,255,224,0.08))] px-4 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_14px_34px_rgba(23,73,160,0.12)] transition duration-300 hover:-translate-y-0.5 hover:border-[#78a6ff]/55 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_18px_42px_rgba(28,83,180,0.2)]"
                     >
-                      Creator profile <span>↗</span>
+                      <span className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-[radial-gradient(circle_at_right,rgba(116,164,255,0.2),transparent_68%)]" />
+                      <span className="relative">
+                        <span className="block text-[9px] font-semibold uppercase tracking-[0.22em] text-[#84aaff]">Public identity</span>
+                        <span className="mt-1.5 block text-sm font-semibold text-white">Creator profile</span>
+                      </span>
+                      <span className="relative grid h-9 w-9 place-items-center rounded-full border border-[#8caeff]/35 bg-[#719cff]/12 text-[#a9c0ff] transition group-hover:rotate-12 group-hover:bg-[#719cff]/20">↗</span>
                     </Link>
                     <div className="flex min-h-[74px] items-center justify-between rounded-2xl border border-white/8 bg-[linear-gradient(135deg,rgba(146,255,231,0.05),rgba(255,255,255,0.025))] px-4 py-4">
                       <div>
