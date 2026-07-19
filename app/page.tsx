@@ -1205,13 +1205,22 @@ export default function Page() {
                     title="Optional Sender Announcement"
                     helper={
                       announcementTweetText ? (
-                        <Link
-                          href={announcementTweetIntentUrl}
-                          target="_blank"
-                          className="rounded-full border border-[#4cb7ff]/35 bg-[linear-gradient(135deg,#43b3ff_0%,#1d9bf0_60%,#1176d4_100%)] px-3 py-1.5 text-[10px] uppercase tracking-[0.18em] text-white transition hover:scale-[1.02]"
-                        >
-                          Share on X
-                        </Link>
+                        <span className="flex items-center gap-2">
+                          <Link
+                            href={`/reward/${createdTipId?.toString()}`}
+                            target="_blank"
+                            className="rounded-full border border-[#92ffe7]/20 bg-[#92ffe7]/8 px-3 py-1.5 text-[10px] uppercase tracking-[0.18em] text-[#92ffe7] transition hover:bg-[#92ffe7]/14"
+                          >
+                            View receipt
+                          </Link>
+                          <Link
+                            href={announcementTweetIntentUrl}
+                            target="_blank"
+                            className="rounded-full border border-[#4cb7ff]/35 bg-[linear-gradient(135deg,#43b3ff_0%,#1d9bf0_60%,#1176d4_100%)] px-3 py-1.5 text-[10px] uppercase tracking-[0.18em] text-white transition hover:scale-[1.02]"
+                          >
+                            Share on X
+                          </Link>
+                        </span>
                       ) : null
                     }
                   />
@@ -1269,9 +1278,18 @@ export default function Page() {
                           : "Connect the X account that owns the handle receiving this reward."}
                     </p>
                     {xUsername ? (
-                      <SecondaryButton onClick={() => void disconnectX()}>
-                        Disconnect X
-                      </SecondaryButton>
+                      <div className="flex flex-wrap gap-2">
+                        <Link
+                          href={`/creator/${xUsername}`}
+                          target="_blank"
+                          className="flex h-12 items-center rounded-2xl border border-[#92ffe7]/20 bg-[#92ffe7]/8 px-4 text-sm font-semibold text-[#92ffe7] transition hover:bg-[#92ffe7]/14"
+                        >
+                          View profile ↗
+                        </Link>
+                        <SecondaryButton onClick={() => void disconnectX()}>
+                          Disconnect X
+                        </SecondaryButton>
+                      </div>
                     ) : (
                       <PrimaryButton
                         onClick={() => {
@@ -1361,6 +1379,20 @@ export default function Page() {
                             : "Active"
                       }
                     />
+                    <Link
+                      href={`/reward/${selectedClaimTip.tipId.toString()}`}
+                      target="_blank"
+                      className="flex min-h-[74px] items-center justify-between rounded-2xl border border-[#92ffe7]/18 bg-[#92ffe7]/7 px-4 py-4 text-sm font-semibold text-[#92ffe7] transition hover:bg-[#92ffe7]/12"
+                    >
+                      Public receipt <span>↗</span>
+                    </Link>
+                    <Link
+                      href={`/creator/${selectedClaimTip.recipientHandle.replace(/^@/, "")}`}
+                      target="_blank"
+                      className="flex min-h-[74px] items-center justify-between rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-4 text-sm font-semibold text-white transition hover:bg-white/[0.06]"
+                    >
+                      Creator profile <span>↗</span>
+                    </Link>
                   </div>
                 ) : null}
 
