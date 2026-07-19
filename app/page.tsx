@@ -450,25 +450,47 @@ function InfrastructureLink({
   );
 }
 
-function BuiltOnArcCard() {
+function BuiltOnArcCard({ expanded = false }: { expanded?: boolean }) {
   return (
     <section
       data-ui="panel"
       className="relative flex h-full min-h-[226px] overflow-hidden rounded-[32px] border border-white/8 bg-[linear-gradient(135deg,rgba(14,28,32,0.98),rgba(8,12,20,0.99))] p-6 shadow-[0_36px_100px_rgba(0,0,0,0.42)] sm:p-7"
     >
       <div className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-[#92ffe7]/10 blur-3xl" />
-      <div className="relative grid w-full gap-7 md:grid-cols-[1fr_auto] md:items-end">
-        <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#92ffe7]">Infrastructure</p>
-          <h2 className="mt-3 text-2xl font-medium text-white sm:text-3xl">HandleFi is built on Arc.</h2>
-          <p className="mt-3 max-w-xl text-sm leading-7 text-slate-400">
-            HandleFi owns the social reward experience. Arc Network provides the testnet settlement infrastructure for its USDC and EURC flows.
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-2 md:max-w-[250px] md:justify-end">
-          <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300">USDC gas</span>
-          <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300">EVM</span>
-          <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300">Testnet</span>
+      <div className="relative flex w-full flex-col gap-6">
+        {expanded ? (
+          <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr] items-center gap-2 rounded-[22px] border border-[#92ffe7]/12 bg-[#92ffe7]/[0.04] px-4 py-4">
+            {[
+              ["X", "Identity"],
+              ["$", "USDC / EURC"],
+              ["A", "Settlement"],
+            ].map(([mark, label], index) => (
+              <div key={label} className="contents">
+                <div className="flex min-w-0 items-center gap-3">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#92ffe7]/20 bg-[#92ffe7]/10 font-mono text-xs text-[#92ffe7]">
+                    {mark}
+                  </span>
+                  <span className="truncate text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300">{label}</span>
+                </div>
+                {index < 2 ? <span className="text-[#92ffe7]/60">→</span> : null}
+              </div>
+            ))}
+          </div>
+        ) : null}
+
+        <div className="mt-auto grid gap-7 md:grid-cols-[1fr_auto] md:items-end">
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#92ffe7]">Infrastructure</p>
+            <h2 className="mt-3 text-2xl font-medium text-white sm:text-3xl">HandleFi is built on Arc.</h2>
+            <p className="mt-3 max-w-xl text-sm leading-7 text-slate-400">
+              HandleFi owns the social reward experience. Arc Network provides the testnet settlement infrastructure for its USDC and EURC flows.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2 md:max-w-[250px] md:justify-end">
+            <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300">USDC gas</span>
+            <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300">EVM</span>
+            <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300">Testnet</span>
+          </div>
         </div>
       </div>
     </section>
@@ -1389,7 +1411,7 @@ export default function Page() {
             <Panel
               title="HandleFi infrastructure"
               subtitle="HandleFi is the product. Arc Network is the testnet infrastructure used for contract execution and stablecoin settlement."
-              className="xl:col-start-1 xl:row-start-1"
+              className="flex flex-col xl:col-start-1 xl:row-start-1"
             >
               <div className="grid gap-4 md:grid-cols-2">
                 <Stat
@@ -1408,6 +1430,29 @@ export default function Page() {
                   label="Public verification"
                   value="Users can inspect HandleFi activity and contract state through the Arc Testnet explorer."
                 />
+              </div>
+              <div className="mt-auto pt-5">
+                <div className="rounded-[24px] border border-[#92ffe7]/14 bg-[linear-gradient(110deg,rgba(146,255,231,0.08),rgba(255,255,255,0.02))] p-5">
+                  <div className="grid gap-4 sm:grid-cols-[1fr_auto_1fr_auto_1fr] sm:items-center">
+                    <div>
+                      <p className="font-mono text-[10px] tracking-[0.24em] text-[#92ffe7]">01</p>
+                      <p className="mt-2 text-sm font-semibold text-white">Social signal</p>
+                      <p className="mt-1 text-xs leading-5 text-slate-400">A creator and reason are defined on X.</p>
+                    </div>
+                    <span className="hidden text-[#92ffe7]/50 sm:block">→</span>
+                    <div>
+                      <p className="font-mono text-[10px] tracking-[0.24em] text-[#92ffe7]">02</p>
+                      <p className="mt-2 text-sm font-semibold text-white">Handle lock</p>
+                      <p className="mt-1 text-xs leading-5 text-slate-400">Stablecoins are reserved to the handle.</p>
+                    </div>
+                    <span className="hidden text-[#92ffe7]/50 sm:block">→</span>
+                    <div>
+                      <p className="font-mono text-[10px] tracking-[0.24em] text-[#92ffe7]">03</p>
+                      <p className="mt-2 text-sm font-semibold text-white">Onchain claim</p>
+                      <p className="mt-1 text-xs leading-5 text-slate-400">Identity proof unlocks settlement.</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </Panel>
 
@@ -1446,7 +1491,7 @@ export default function Page() {
             </Panel>
 
             <div className="xl:col-start-2 xl:row-start-2">
-              <BuiltOnArcCard />
+              <BuiltOnArcCard expanded />
             </div>
           </div>
         </section>
