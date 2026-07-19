@@ -893,13 +893,6 @@ export default function Page() {
         setCreatedTipId(createdTipId);
         setTipApproved(false);
         setTipStatus(`Reward created. Tip ID: ${createdTipId.toString()}`);
-        const tweetUrl = makeRewardAnnouncementIntentUrl({
-          recipientHandle: handle,
-          message: tipMessage,
-          tipId: createdTipId,
-          postUrl: normalizedPostUrl,
-        });
-        window.open(tweetUrl, "_blank", "noopener,noreferrer");
       } else {
         setTipStatus("Reward created. Check ArcScan for the TipCreated event.");
       }
