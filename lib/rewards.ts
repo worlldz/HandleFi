@@ -109,11 +109,23 @@ export async function getCreatorRewards(handle: string) {
   if (!CONTRACTS.tips) return [];
 
   const normalizedHandle = handle.replace(/^@/, "").toLowerCase();
-  const nextTipId = (await (client.readContract as any)({
-    address: CONTRACTS.tips,
-    abi: handleFiTipsAbi,
-    functionName: "nextTipId",
-  })) as bigint;
+  let nextTipId: bigint | undefined;
+  let nextTipError: unknown;
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    try {
+      nextTipId = (await (client.readContract as any)({
+        address: CONTRACTS.tips,
+        abi: handleFiTipsAbi,
+        functionName: "nextTipId",
+      })) as bigint;
+      break;
+    } catch (error) {
+      nextTipError = error;
+      if (attempt < 3) await delay(600 * 2 ** attempt);
+    }
+  }
+
+  if (nextTipId === undefined) throw nextTipError;
 
   const rewards: PublicReward[] = [];
   for (let id = nextTipId - 1n; id >= 1n; id -= 1n) {

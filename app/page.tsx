@@ -108,9 +108,11 @@ function getReadableError(error: unknown, fallback: string) {
 
   if (
     message.includes("rate limited") ||
-    message.includes("Request exceeds defined limit")
+    message.includes("Request exceeds defined limit") ||
+    message.includes("request limit reached") ||
+    message.includes("RPC Request failed")
   ) {
-    return "Network request is being rate limited right now. Wait 2-3 seconds and try again.";
+    return "Arc Testnet RPC is busy right now. HandleFi will retry automatically; try again in a few seconds if rewards do not appear.";
   }
 
   return message;
@@ -735,12 +737,24 @@ export default function Page() {
     setClaimLoadError("");
 
     try {
-      const nextTipId = (await (publicClient.readContract as any)({
-        address: tipsAddress,
-        abi: handleFiTipsAbi,
-        functionName: "nextTipId",
-        args: [],
-      })) as bigint;
+      let nextTipId: bigint | undefined;
+      let nextTipError: unknown;
+      for (let attempt = 0; attempt < 4; attempt += 1) {
+        try {
+          nextTipId = (await (publicClient.readContract as any)({
+            address: tipsAddress,
+            abi: handleFiTipsAbi,
+            functionName: "nextTipId",
+            args: [],
+          })) as bigint;
+          break;
+        } catch (error) {
+          nextTipError = error;
+          if (attempt < 3) await wait(600 * 2 ** attempt);
+        }
+      }
+
+      if (nextTipId === undefined) throw nextTipError;
 
       const total = Number(nextTipId > 1n ? nextTipId - 1n : 0n);
       if (!total) {
