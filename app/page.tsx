@@ -454,7 +454,7 @@ function BuiltOnArcCard() {
   return (
     <section
       data-ui="panel"
-      className="relative flex min-h-[226px] overflow-hidden rounded-[32px] border border-white/8 bg-[linear-gradient(135deg,rgba(14,28,32,0.98),rgba(8,12,20,0.99))] p-6 shadow-[0_36px_100px_rgba(0,0,0,0.42)] sm:p-7 xl:h-[281px]"
+      className="relative flex h-full min-h-[226px] overflow-hidden rounded-[32px] border border-white/8 bg-[linear-gradient(135deg,rgba(14,28,32,0.98),rgba(8,12,20,0.99))] p-6 shadow-[0_36px_100px_rgba(0,0,0,0.42)] sm:p-7"
     >
       <div className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-[#92ffe7]/10 blur-3xl" />
       <div className="relative grid w-full gap-7 md:grid-cols-[1fr_auto] md:items-end">
@@ -479,7 +479,7 @@ function BuildOnArcStatement() {
   return (
     <section
       data-ui="panel"
-      className="group relative flex min-h-[226px] overflow-hidden rounded-[32px] border border-white/8 bg-[linear-gradient(145deg,rgba(8,13,22,0.99),rgba(11,28,29,0.96))] p-6 shadow-[0_36px_100px_rgba(0,0,0,0.42)] sm:p-7 xl:h-[281px]"
+      className="group relative flex h-full min-h-[226px] overflow-hidden rounded-[32px] border border-white/8 bg-[linear-gradient(145deg,rgba(8,13,22,0.99),rgba(11,28,29,0.96))] p-6 shadow-[0_36px_100px_rgba(0,0,0,0.42)] sm:p-7"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_82%_30%,rgba(146,255,231,0.14),transparent_28%),linear-gradient(110deg,transparent_42%,rgba(255,255,255,0.025)_42.5%,transparent_43%)]" />
       <div className="pointer-events-none absolute -right-10 top-1/2 h-36 w-36 -translate-y-1/2 rounded-full border border-[#92ffe7]/10 transition duration-700 group-hover:scale-110" />
@@ -1039,11 +1039,11 @@ export default function Page() {
 
       {tab === "rewards" ? (
         <section className="grid gap-10 xl:grid-cols-[1.04fr_0.96fr]">
-          <div className="space-y-8">
+          <div className="space-y-8 xl:contents">
             <Panel
               title="Create Reward"
               subtitle="Lock USDC or EURC to an X handle. Add your own message and let HandleFi handle the proof flow."
-              className="flex flex-col h-full xl:h-[760px]"
+              className="flex h-full flex-col xl:col-start-1 xl:row-start-1 xl:h-[760px]"
             >
               <div className="grid gap-4">
                 <div>
@@ -1151,7 +1151,7 @@ export default function Page() {
             <Panel
               title="Claim Reward"
               subtitle="Connect your X account to claim your rewards."
-              className="flex flex-col xl:h-[616px]"
+              className="flex flex-col xl:col-start-1 xl:row-start-2"
             >
               <div className="panel-scroll grid gap-4 xl:min-h-0 xl:flex-1 xl:overflow-y-auto xl:pr-1">
                 <div data-ui="subpanel" className="rounded-[28px] border border-white/8 bg-[linear-gradient(180deg,#0d131c,#091019)] p-4">
@@ -1283,11 +1283,13 @@ export default function Page() {
                 {claimStatus ? <Status text={claimStatus} /> : null}
               </div>
             </Panel>
-            <BuiltOnArcCard />
+            <div className="xl:col-start-1 xl:row-start-3">
+              <BuiltOnArcCard />
+            </div>
           </div>
 
-          <div className="space-y-8">
-            <Panel title="The HandleFi Protocol" className="flex flex-col h-full xl:h-[760px]">
+          <div className="space-y-8 xl:contents">
+            <Panel title="The HandleFi Protocol" className="flex h-full flex-col xl:col-start-2 xl:row-start-1 xl:h-[760px]">
               <div className="mt-4 flex flex-1 flex-col gap-4">
                 <div className="grid gap-4">
                 <Stat label="1. Spot a Creator" value="Find a tweet or profile that deserves a reward." />
@@ -1311,7 +1313,7 @@ export default function Page() {
             <Panel
               title="Network & tools"
               subtitle="Useful infrastructure links for checking HandleFi transactions, contracts, and the network it runs on."
-              className="flex flex-col xl:h-[616px]"
+              className="flex flex-col xl:col-start-2 xl:row-start-2"
             >
               <div className="mt-7 grid gap-3 sm:grid-cols-2">
                 <InfrastructureLink number="01" title="Network overview" description="Learn how Arc Network is designed for stablecoin applications." href="https://www.arc.io/" />
@@ -1320,7 +1322,9 @@ export default function Page() {
                 <InfrastructureLink number="04" title="Builder community" description="Updates, technical discussions, and ecosystem events." href="https://community.arc.io/" />
               </div>
             </Panel>
-            <BuildOnArcStatement />
+            <div className="xl:col-start-2 xl:row-start-3">
+              <BuildOnArcStatement />
+            </div>
           </div>
         </section>
       ) : tab === "payment" ? (
