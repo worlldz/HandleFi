@@ -38,6 +38,11 @@ export const TOKENS = {
     address: "0x89B50855Aa3bE2F677cD6303Cec089B5F319D72a" as const,
     decimals: 6,
   },
+  cirBTC: {
+    symbol: "cirBTC",
+    address: "0xf0C4a4CE82A5746AbAAd9425360Ab04fbBA432BF" as const,
+    decimals: 8,
+  },
 } as const;
 
 const rawTipsContract = process.env.NEXT_PUBLIC_TIPS_CONTRACT;

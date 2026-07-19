@@ -16,6 +16,7 @@ import {
   useConnect,
   useDisconnect,
   usePublicClient,
+  useReadContract,
   useSwitchChain,
   useWriteContract,
 } from "wagmi";
@@ -616,6 +617,16 @@ export default function Page() {
 
   const selectedTipToken = TOKENS[tipToken];
   const selectedPaymentToken = TOKENS[paymentToken];
+  const { data: selectedPaymentBalance, refetch: refetchPaymentBalance } = useReadContract({
+    abi: erc20Abi,
+    address: selectedPaymentToken.address,
+    functionName: "balanceOf",
+    args: address ? [address] : undefined,
+    chainId: arcTestnet.id,
+    query: {
+      enabled: Boolean(address) && chainId === arcTestnet.id,
+    },
+  });
 
   const parsedTipAmount = useMemo(
     () => safeParseAmount(tipAmount, selectedTipToken.decimals),
@@ -1004,6 +1015,7 @@ export default function Page() {
       });
 
       await publicClient?.waitForTransactionReceipt({ hash });
+      await refetchPaymentBalance();
       setPaymentStatus("Payment completed.");
     } catch (error) {
       setPaymentStatus(error instanceof Error ? error.message : "Payment failed.");
@@ -1425,7 +1437,7 @@ export default function Page() {
         <section className="grid gap-8 xl:grid-cols-[1.02fr_0.98fr]">
           <Panel
             title="Send Payment"
-            subtitle="Directly send USDC or EURC to a wallet address. Address must be valid and start with 0x."
+            subtitle="Directly send USDC, EURC, or cirBTC to a wallet address on Arc Testnet."
           >
             <div className="grid gap-4">
               <div className="grid gap-4 sm:grid-cols-2">
@@ -1437,15 +1449,22 @@ export default function Page() {
                   >
                     <option value="USDC">USDC</option>
                     <option value="EURC">EURC</option>
+                    <option value="cirBTC">cirBTC</option>
                   </Select>
                 </div>
 
                 <div>
-                  <Label title="Amount" />
+                  <div className="flex items-end justify-between gap-3">
+                    <Label title="Amount" />
+                    <span className="mb-2 text-[11px] font-medium text-slate-400">
+                      Balance: {selectedPaymentBalance !== undefined ? `${Number(formatUnits(selectedPaymentBalance, selectedPaymentToken.decimals)).toLocaleString(undefined, { maximumFractionDigits: paymentToken === "cirBTC" ? 8 : 4 })} ${paymentToken}` : "--"}
+                    </span>
+                  </div>
                   <Input
                     type="number"
-                    step="0.01"
-                    placeholder="10.00"
+                    min="0"
+                    step={paymentToken === "cirBTC" ? "0.00000001" : "0.01"}
+                    placeholder={paymentToken === "cirBTC" ? "0.001" : "10.00"}
                     value={paymentAmount}
                     onChange={(event) => setPaymentAmount(event.target.value)}
                   />
@@ -1471,6 +1490,7 @@ export default function Page() {
 
           <Panel title="Payment Notes">
             <div className="grid gap-3">
+              <Stat label="Supported assets" value="USDC, EURC, and cirBTC on Arc Testnet." />
               <Stat label="Validation" value="Address must start with 0x and pass wallet format validation." />
               <Stat label="Blocked" value="Zero address is rejected." />
               <Stat label="Reminder" value="A valid blockchain address can still be unused; chain cannot prove ownership in advance." />
