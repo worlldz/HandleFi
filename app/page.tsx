@@ -1385,10 +1385,11 @@ export default function Page() {
         </section>
       ) : (
         <section className="grid gap-10 xl:grid-cols-[1.02fr_0.98fr]">
-          <div className="space-y-8">
+          <div className="space-y-8 xl:contents">
             <Panel
               title="HandleFi infrastructure"
               subtitle="HandleFi is the product. Arc Network is the testnet infrastructure used for contract execution and stablecoin settlement."
+              className="xl:col-start-1 xl:row-start-1"
             >
               <div className="grid gap-4 md:grid-cols-2">
                 <Stat
@@ -1410,7 +1411,7 @@ export default function Page() {
               </div>
             </Panel>
 
-            <Panel title="What belongs to HandleFi">
+            <Panel title="What belongs to HandleFi" className="xl:col-start-1 xl:row-start-2">
               <div className="grid gap-3 sm:grid-cols-2">
                 <Stat label="Product identity" value="The HandleFi name, interface, social reward flow, and X integration." />
                 <Stat label="Application logic" value="Creator handles, reward messages, claim matching, deadlines, and refund behavior." />
@@ -1420,8 +1421,8 @@ export default function Page() {
             </Panel>
           </div>
 
-          <div className="space-y-8">
-            <Panel title="Why this stack fits">
+          <div className="space-y-8 xl:contents">
+            <Panel title="Why this stack fits" className="xl:col-start-2 xl:row-start-1">
               <div className="grid gap-4">
                 <div className="rounded-[28px] border border-white/8 bg-white/[0.025] p-5">
                   <p className="text-[11px] uppercase tracking-[0.32em] text-slate-500">Social rewards</p>
@@ -1444,7 +1445,9 @@ export default function Page() {
               </div>
             </Panel>
 
-            <BuiltOnArcCard />
+            <div className="xl:col-start-2 xl:row-start-2">
+              <BuiltOnArcCard />
+            </div>
           </div>
         </section>
       )}
